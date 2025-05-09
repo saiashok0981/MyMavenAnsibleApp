@@ -1,4 +1,14 @@
-- name: Restart Tomcat
-  systemd:
-    name: tomcat9
-    state: restarted
+- name: Deploy to Tomcat
+  hosts: web
+  become: yes
+  tasks:
+    - name: Copy WAR file to Tomcat
+      copy:
+        src: "/var/snap/jenkins/4859/workspace/MavenAnsible-CICD/target/MavenAnsibleWebApp.war"
+        dest: "/opt/tomcat/webapps/MavenAnsibleWebApp.war"
+        remote_src: no
+
+    - name: Restart Tomcat
+      systemd:
+        name: tomcat9   # or tomcat, depending on your system
+        state: restarted
